@@ -1,11 +1,10 @@
-import json
 import cv2
 import numpy as np
 from torch.utils.data import Dataset
 
-prompt_path = "D:/Deep Learning Projects/fill50k-controlnet/fill50k/prompt.json"
-source_dir = "D:/Deep Learning Projects/fill50k-controlnet/fill50k/fill50k/"
-target_dir = "D:/Deep Learning Projects/fill50k-controlnet/fill50k/fill50k/"
+prompt_path = "./fill50k/prompt.json"
+source_dir = "./fill50k/fill50k/"
+target_dir = "./fill50k/fill50k/"
 
 
 class MyDataset(Dataset):
@@ -14,7 +13,7 @@ class MyDataset(Dataset):
         with open(prompt_path, 'rt') as f:
             for line in f:
                 self.data.append(json.loads(line))
-    
+
     def __len__(self):
         return len(self.data)
 
@@ -25,7 +24,8 @@ class MyDataset(Dataset):
         prompt = item['prompt']
         source = cv2.imread(source_dir+source_file)
         target = cv2.imread(target_dir+target_file)
-
+        if target is None:
+            raise FileNotFoundError(f"Error: Image file not found or unreadable: {target_dir+target_file}")
         source = cv2.cvtColor(source, cv2.COLOR_BGR2RGB)
         target = cv2.cvtColor(target, cv2.COLOR_BGR2RGB)
 

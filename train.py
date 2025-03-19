@@ -12,7 +12,7 @@ learning_rate = 1e-5
 sd_locked = True
 only_mid_control = False
 
-model = create_model('./models/cldm_test_v21.yaml').cpu()
+model = create_model('./forked_controlnet/ControlNet/models/cldm_v21.yaml').cpu()
 model.load_state_dict(load_state_dict(resume_path, location='cpu'))
 model.learning_rate = learning_rate
 model.sd_locked = sd_locked
@@ -23,7 +23,7 @@ model.only_mid_control = only_mid_control
 dataset = MyDataset()
 dataloader = DataLoader(dataset, num_workers=0, batch_size=batch_size, shuffle=True)
 logger = ImageLogger(batch_frequency=logger_freq)
-trainer = pl.Trainer(gpus=1, precision=32, callbacks=[logger])
+trainer = pl.Trainer(accelerator="gpu", devices=1, precision=32, callbacks=[logger])
 
 
 # Train!
